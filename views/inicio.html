@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dashboard - Brand</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+</head>
+
+<body id="page-top">
+    {% if 'rol' in session %}
+    <div id="wrapper">
+        <nav class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark"
+            style="background: #760a16;">
+            <div class="container-fluid d-flex flex-column p-0">
+                
+                
+                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#"
+                style="--bs-primary: #44040b; --bs-primary-rgb: 68, 4, 11; --bs-secondary: #760a16; --bs-secondary-rgb: 118, 10, 22; --bs-success: #ad1326; --bs-success-rgb: 173, 19, 38;">
+                <div class="sidebar-brand-icon rotate-n-15" data-bs-theme="dark"></div>
+                <div class="sidebar-brand-text mx-3">
+                    <!-- Añade la imagen con animación, bordes redondeados y ajuste de posición -->
+                    <img src="../static/img/dogs/logo.png" alt="Logo IMER" class="animated-logo">
+                </div>
+            </a>
+            
+            <!-- Estilos CSS para ajustar tamaño, agregar animación, bordes redondeados y ajuste de posición -->
+            <style>
+                .animated-logo {
+                    height: 65px; /* Ajusta la altura */
+                    width: 105px; /* Asegura que la imagen mantenga la proporción */
+                    animation: move 3s infinite alternate; /* Aplica la animación de movimiento */
+                    border-radius: 10px; /* Borde redondeado, ajusta el valor según sea necesario */
+                    position: relative; /* Habilita el posicionamiento relativo */
+                    top: 10px; /* Ajusta la posición hacia abajo */
+                    left: -10px; /* Ajusta la posición hacia la derecha */
+                }
+            
+                /* Animación personalizada: suavemente mueve la imagen de izquierda a derecha */
+                @keyframes move {
+                    0% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(10px); /* Ajusta este valor para controlar el movimiento */
+                    }
+                }
+            </style>
+            
+
+
+
+
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    {% if session['rol'] == 'administrador' %}
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('dashboard') }}"><i
+                                class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}"><i
+                                class="fas fa-money-bill-wave"></i><span>Ventas</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario') }}"><i
+                                class="fas fa-table"></i><span>Stock</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('pronostico') }}"><i
+                                class="fas fa-calendar-alt"></i><span>Pronóstico</span></a></li> <!-- Nueva opción aquí -->
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}"><i
+                                class="fas fa-user-circle"></i><span>Usuarios</span></a></li>
+                    {% elif session['rol'] == 'encargado' %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}"><i
+                                class="fas fa-money-bill-wave"></i><span>Ventas</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario') }}"><i
+                                class="fas fa-table"></i><span>Stock</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('pronostico') }}"><i
+                                class="fas fa-calendar-alt"></i><span>Pronóstico</span></a></li> <!-- Nueva opción aquí -->
+                    {% elif session['rol'] == 'empleado' %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}"><i
+                                class="fas fa-money-bill-wave"></i><span>Ventas</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario') }}"><i
+                                class="fas fa-table"></i><span>Stock</span></a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}"><i
+                                class="fas fa-user"></i><span>Perfil</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><i
+                                class="fas fa-arrow-right"></i><span>Cerrar Sesión</span></a></li>
+                </ul>                
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
+                        id="sidebarToggle" type="button"></button></div>
+            </div>
+
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <nav class="navbar navbar-expand bg-white shadow mb-4 topbar">
+                <ul class="navbar-nav flex-nowrap ms-auto">
+                    <li class="nav-item dropdown no-arrow">
+                        <div class="nav-item dropdown no-arrow">
+                            <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"
+                                href="#">
+                                <span class="d-none d-lg-inline me-2 text-gray-600 small">
+                                    {{ session['nombre'] }} {{ session['apellido'] }} - {{ session['rol'] }}
+                                </span>
+                                <img class="border rounded-circle img-profile" src="../static/img/dogs/image.jpeg">
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <div id="content"
+                style="--bs-primary: #44040b;--bs-primary-rgb: 68,4,11;--bs-secondary: #760a16;--bs-secondary-rgb: 118,10,22;--bs-success: #ad1326;--bs-info: #ad1326;--bs-warning: #cb1228;--bs-warning-rgb: 203,18,40;--bs-info-rgb: 173,19,38;--bs-success-rgb: 173,19,38;">
+                <div class="container-fluid">
+
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0"><b>Dashboard</b></h3>
+
+                        <!-- <a
+                            class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i
+                                class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a> -->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xl-4 mb-4">
+                            <div class="card shadow border-left-primary py-2">
+                                <div class="card-body">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col me-2">
+                                            <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                                <span>Nro. de Usuarios Registrados</span>
+                                            </div>
+                                            <div class="text-dark fw-bold h5 mb-0">
+                                                <span>{{ total_usuarios }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-4 mb-4">
+                            <div class="card shadow border-left-success py-2">
+                                <div class="card-body">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col me-2">
+                                            <div class="text-uppercase text-success fw-bold text-xs mb-1">
+                                                <span>Nro. de Ventas Hechas</span>
+                                            </div>
+                                            <div class="text-dark fw-bold h5 mb-0">
+                                                <span>{{ total_ventas }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-4 mb-4">
+                            <div class="card shadow border-left-success py-2">
+                                <div class="card-body">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col me-2">
+                                            <div class="text-uppercase text-success fw-bold text-xs mb-1">
+                                                <span>Nro. de Productos de Inventario</span>
+                                            </div>
+                                            <div class="text-dark fw-bold h5 mb-0">
+                                                <span>{{ total_productos }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-xl-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="text-primary fw-bold m-0">USUARIOS</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-area">
+                                        <canvas id="usuariosChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 mb-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="text-primary fw-bold m-0">VENTAS HECHAS EN LOS ULTIMOS 5 DIAS</h6>
+                                </div>
+                                <div class="card-body">
+                                    {% for venta in ventas_ultimos_5_dias %}
+                                    <h4 class="small fw-bold">{{ venta.fecha }}<span class="float-end">Nro. de Ventas: {{
+                                            venta.ventas_por_dia }}</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-success" aria-valuenow="{{ venta.ventas_por_dia }}"
+                                            aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ venta.ventas_por_dia }}%;"><span class="visually-hidden">{{
+                                                venta.ventas_por_dia }}%</span></div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                  
+                </div>
+            </div>
+            <!-- Modal para seleccionar fecha futura -->
+            <div class="modal fade" id="fechaModal" tabindex="-1" aria-labelledby="fechaModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="fechaModalLabel">Seleccionar Fecha Futura</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="date" class="form-control datepicker" id="fechaFuturaInput"
+                                placeholder="Seleccione una fecha">
+                       
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>2024 - Registro de Ventas</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    {% endif %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bs-init.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script>
+        function submitFechaFutura() {
+            const fechaFutura = document.getElementById('fechaFuturaInput').value;
+            if (fechaFutura) {
+                window.location.href = "{{ url_for('prediccion_futuro') }}" + "?fecha=" + fechaFutura;
+            }
+        }
+
+        const rolesData = {{ roles_data | tojson }};
+        const ctx = document.getElementById('usuariosChart').getContext('2d');
+        const usuariosChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(rolesData),
+                datasets: [{
+                    label: 'Usuarios',
+                    data: Object.values(rolesData),
+                    backgroundColor: ['#4e73df', '#1cc88a'],
+                    borderColor: ['#ffffff', '#ffffff'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                legend: {
+                    display: true,
+                    labels: {
+                        fontStyle: 'normal'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

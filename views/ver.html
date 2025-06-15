@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Detalle Pronóstico</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <style>
+        /* Clase para ocultar el sidebar */
+        .sidebar.toggled {
+            width: 0;
+            overflow: hidden;
+            transition: width 0.3s ease;
+        }
+
+        .content-wrapper {
+            transition: margin-left 0.3s ease;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #wrapper {
+            display: flex;
+            min-height: 100vh;
+            flex: 1;
+            background-color: #f8f9fc;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            overflow-y: auto;
+            background: #760a16;
+            z-index: 1000;
+        }
+
+        .content-wrapper {
+            margin-left: 250px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card {
+            border: none;
+            border-radius: 0.375rem;
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .col-lg-8 {
+            max-width: 60%;
+            flex: 1;
+        }
+
+        .col-lg-4 {
+            max-width: 35%;
+        }
+
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+        }
+
+        .bg-gradient-primary {
+            background: #760a16;
+        }
+
+        .img-profile {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .sticky-footer {
+            background-color: #f8f9fc;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .btn-red {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-red:hover {
+            background-color: #c82333;
+        }
+
+        .btn-green {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-green:hover {
+            background-color: #218838;
+        }
+
+        .animated-logo {
+            height: 65px;
+            width: 105px;
+            animation: move 3s infinite alternate;
+            border-radius: 10px;
+            position: relative;
+            top: 10px;
+            left: -10px;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(10px);
+            }
+        }
+
+        .btn-center {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .table {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* Ajustar tabla para hacer scroll solo en el contenido y dejar los headers fijos */
+        .table-responsive {
+            position: relative;
+            height: 500px; /* Ajusta este valor según la altura deseada */
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #f8f9fc; /* Fondo visible para las cabeceras */
+        }
+
+        .sticky-card {
+            position: sticky;
+            top: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body id="page-top">
+    {% if 'rol' in session %}
+    <div id="wrapper">
+        <nav class="navbar align-items-start sidebar sidebar-dark accordion p-0 navbar-dark">
+            <div class="container-fluid d-flex flex-column p-0">
+                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-icon rotate-n-15" data-bs-theme="dark"></div>
+                    <div class="sidebar-brand-text mx-3">
+                        <img src="../static/img/dogs/logo.png" alt="Logo IMER" class="animated-logo">
+                    </div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    {% if session['rol'] == 'administrador' %}
+                        <li class="nav-item"><a class="nav-link active" href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}"><i class="fas fa-money-bill-wave"></i><span>Ventas</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario') }}"><i class="fas fa-table"></i><span>Stock</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}"><i class="fas fa-user-circle"></i><span>Usuarios</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('pronostico') }}"><i class="fas fa-calendar-alt"></i><span>Pronóstico</span></a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}"><i class="fas fa-user"></i><span>Perfil</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-arrow-right"></i><span>Cerrar Sesión</span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="d-flex flex-column content-wrapper" id="content-wrapper">
+            <nav class="navbar navbar-expand bg-white shadow mb-4 topbar">
+                <ul class="navbar-nav flex-nowrap ms-auto">
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                            <span class="d-none d-lg-inline me-2 text-gray-600 small">{{ session['nombre'] }} {{ session['apellido'] }} - {{ session['rol'] }}</span>
+                            <img class="border rounded-circle img-profile" src="{{ url_for('static', filename='img/dogs/image.jpeg') }}">
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <div id="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-6 d-flex justify-content-start align-items-center">
+                            <form method="GET" action="{{ url_for('ver') }}" class="d-flex align-items-center">
+                                <div class="form-group mb-0 d-flex align-items-center">
+                                    <label for="mesSelect" class="mr-2 mb-0">Seleccionar mes:</label>
+                                    <select id="mesSelect" name="mes" class="form-control" style="max-width: 200px;">
+                                        <option value="" {% if not selected_mes %}selected{% endif %}>Mostrar todos los meses</option>
+                                        {% for mes_anio in todos_meses %}
+                                        <option value="{{ mes_anio }}" {% if selected_mes == mes_anio %}selected{% endif %}>{{ mes_anio }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary ml-3" style="height: auto;">Filtrar</button>
+                            </form>
+                        </div>
+                    
+                        <div class="col-lg-6 d-flex justify-content-center align-items-center">
+                            <!-- Botón para navegar a "ver_detalles" -->
+                            <a href="{{ url_for('ver_detalles') }}" class="btn btn-green">Ver Detalles de los Productos</a>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-lg-8">
+                            <div class="card shadow mb-3">
+                                <div class="card-header">
+                                    <h4 style="color: #0a0b0bef; font-weight: bold;">Ventas y Pronósticos</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Tipo</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for mes_anio, datos in datos_por_mes.items() %}
+                                                <tr>
+                                                    <td colspan="4" style="background-color: #e9ecef; font-weight: bold;">{{ mes_anio }}</td>
+                                                </tr>
+                                                {% for item in datos %}
+                                                <tr>
+                                                    <td>{{ loop.index }}</td>
+                                                    <td>{{ item.Tipo }}</td>
+                                                    <td>{{ item.Cantidad }}</td>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 sticky-card">
+                            <div class="card shadow mb-3">
+                                <div class="card-header">
+                                    <h4 style="color: #0a0b0bef; font-weight: bold;">Generar PDF</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form id="pdfForm" method="POST" action="{{ url_for('generar_pdf') }}">
+                                        <div class="form-group">
+                                            <label for="mesSelect">Seleccionar mes:</label>
+                                            <select id="mesSelect" name="mes" class="form-control">
+                                                {% for mes_anio in todos_meses %}
+                                                <option value="{{ mes_anio }}" {% if selected_mes == mes_anio %}selected{% endif %}>{{ mes_anio }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="btn-center">
+                                            <button type="submit" class="btn btn-green">Generar PDF</button>
+                                            <a href="{{ url_for('detalle') }}" class="btn btn-red">Volver a DETALLE Pronostico</a>
+                                        </div>
+                                    </form>
+
+                                    <div class="image-container mt-4 text-center">
+                                        <img src="static/img/reporte.png" alt="Descripción de la Imagen" class="img-fluid" style="max-width: 50%; height: auto;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto"><span>Copyright © Your Website 2024</span></div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Modal para mostrar los detalles del producto -->
+    <div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleModalLabel">Detalles del producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Tipo:</strong> <span id="detalleTipo"></span></p>
+                    <p><strong>Material:</strong> <span id="detalleMaterial"></span></p>
+                    <p><strong>Color:</strong> <span id="detalleColor"></span></p>
+                    <p><strong>Cantidad:</strong> <span id="detalleCantidad"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function mostrarDetalles(tipo, material, color, cantidad) {
+            document.getElementById('detalleTipo').innerText = tipo;
+            document.getElementById('detalleMaterial').innerText = material;
+            document.getElementById('detalleColor').innerText = color;
+            document.getElementById('detalleCantidad').innerText = cantidad;
+        }
+    </script>
+
+    <script>
+        function submitPDFForm() {
+            var form = document.getElementById('pdfForm');
+            form.submit();
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>

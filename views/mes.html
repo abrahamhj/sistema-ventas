@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Formulario de Mes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <style>
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-control {
+            border-radius: 0.375rem;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,.125);
+        }
+        .btn-primary {
+            background-color: #760a16;
+            border-color: #760a16;
+        }
+        .btn-primary:hover {
+            background-color: #5a0713;
+            border-color: #5a0713;
+        }
+        .card {
+            border: none;
+            border-radius: 0.375rem;
+        }
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .container-fluid {
+            max-width: 1200px; /* Aumentar el ancho máximo del contenedor */
+        }
+        .bg-gradient-primary {
+            background: #760a16;
+        }
+        .sidebar-brand-icon {
+            font-size: 1.5rem;
+        }
+        .img-profile {
+            width: 3rem;
+            height: 3rem;
+        }
+        .sticky-footer {
+            background-color: #f8f9fc;
+        }
+    </style>
+</head>
+<body id="page-top">
+    {% if 'rol' in session %}
+    <div id="wrapper">
+        <nav class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark">
+            <div class="container-fluid d-flex flex-column p-0">
+                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-icon rotate-n-15"></div>
+                    <div class="sidebar-brand-text mx-3">
+                        <img src="../static/img/dogs/logo.png" alt="Logo IMER" class="animated-logo">
+                    </div>
+                </a>
+
+                <style>
+                    .animated-logo {
+                        height: 65px;
+                        width: 105px;
+                        animation: move 3s infinite alternate;
+                        border-radius: 10px;
+                        position: relative;
+                        top: 10px;
+                        left: -10px;
+                    }
+                    @keyframes move {
+                        0% { transform: translateX(0); }
+                        100% { transform: translateX(10px); }
+                    }
+                </style>
+
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    {% if session['rol'] == 'administrador' %}
+                        <li class="nav-item"><a class="nav-link active" href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}"><i class="fas fa-money-bill-wave"></i><span>Ventas</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario') }}"><i class="fas fa-table"></i><span>Stock</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('pronostico') }}"><i class="fas fa-calendar-alt"></i><span>Pronóstico</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}"><i class="fas fa-user-circle"></i><span>Usuarios</span></a></li>
+                    {% elif session['rol'] == 'encargado' %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}"><i class="fas fa-money-bill-wave"></i><span>Ventas</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario') }}"><i class="fas fa-table"></i><span>Stock</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('pronostico') }}"><i class="fas fa-calendar-alt"></i><span>Pronóstico</span></a></li>
+                    {% elif session['rol'] == 'empleado' %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}"><i class="fas fa-money-bill-wave"></i><span>Ventas</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario') }}"><i class="fas fa-table"></i><span>Stock</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('pronostico') }}"><i class="fas fa-calendar-alt"></i><span>Pronóstico</span></a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}"><i class="fas fa-user"></i><span>Perfil</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-arrow-right"></i><span>Cerrar Sesión</span></a></li>
+                </ul>
+
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+            </div>
+        </nav>
+        
+        <div class="d-flex flex-column" id="content-wrapper">
+            <nav class="navbar navbar-expand bg-white shadow mb-4 topbar">
+                <ul class="navbar-nav flex-nowrap ms-auto">
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                            <span class="d-none d-lg-inline me-2 text-gray-600 small">{{ session['nombre'] }} {{ session['apellido'] }} - {{ session['rol'] }}</span>
+                            <img class="border rounded-circle img-profile" src="{{ url_for('static', filename='img/dogs/image.jpeg') }}">
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div id="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- Pronóstico de Ventas -->
+                        <div class="col-lg-6">
+                            <h2 class="text-dark mb-4"><b>Pronóstico de Ventas Mensual</b></h2>
+                            <div class="card shadow mb-3">
+                                <div class="card-header py-3">
+                                    <h6 style="color: #800a04; font-weight: bold; text-shadow: 0 0 10px #fea013; margin: 0;">Ingrese datos del mes inicial a pronosticar (fecha actual)</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form method="post" action="{{ url_for('ejecutar_prediccion') }}">
+                                        <div class="form-group">
+                                            <label for="fecha">Fecha de inicio:</label>
+                                            <input type="date" id="fecha" name="fecha" class="form-control" required>
+                                        </div>                                        
+                                        <div class="form-group">
+                                            <label for="cantidad_meses">Cantidad de meses a pronosticar:</label>
+                                            <input type="number" id="cantidad_meses" name="cantidad_meses" class="form-control" required min="1" max="12">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Enviar</button>
+                                    </form>
+                                    {% if mensaje %}
+                                    <div id="mensaje_prediccion" class="alert alert-success mt-3" role="alert">
+                                        {{ mensaje }}
+                                    </div>
+                                    {% endif %}
+                                    <a href="{{ url_for('detalle') }}" class="btn btn-primary mt-3">Ver Pronóstico</a>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <!-- Reentrenamiento de Modelo -->
+                        <div class="col-lg-6">
+                            <h2 class="text-dark mb-4"><b>Reentrenamiento de Modelo</b></h2>
+                            <div class="card shadow mb-3">
+                                <div class="card-header py-3">
+                                    <h6 style="color: #800a04; font-weight: bold; text-shadow: 0 0 10px #fea013; margin: 0;">Proceso de Reentrenamiento</h6>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Lugar reservado para la imagen -->
+                                    <div class="image-placeholder" style="height: 200px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; border: 1px solid #ddd;">
+                                        <img src="/static/img/red.jpg" alt="Imagen para el proceso de reentrenamiento" style="width: 100%; height: 100%; object-fit: cover;">
+                                    </div>
+                        
+                                    <!-- Botón de reentrenamiento -->
+                                    <form method="POST" action="{{ url_for('reentrenar_modelo') }}">
+                                        <button id="reentrenar-btn" class="btn btn-primary mt-3">Reentrenar Modelo</button>
+                                    </form>
+                        
+                                    <!-- Bloque para mostrar el mensaje de éxito o error -->
+                                    {% if mensaje_reentrenar %}
+                                    <div id="mensaje_reentrenar" class="alert alert-success mt-3" role="alert">
+                                        {{ mensaje_reentrenar }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright">
+                        <span>&copy; 2024 - Registro de Ventas</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    {% endif %}
+
+    <!-- Script para hacer desaparecer el mensaje de éxito o error después de 8 segundos -->
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            // Ocultar el mensaje de predicción después de 8 segundos
+            const mensaje_prediccion = document.getElementById('mensaje_prediccion');
+            if (mensaje_prediccion) {
+                setTimeout(() => {
+                    mensaje_prediccion.style.display = 'none';
+                }, 8000); // 8000 milisegundos = 8 segundos
+            }
+            
+            // Ocultar el mensaje de reentrenamiento después de 8 segundos
+            const mensaje_reentrenar = document.getElementById('mensaje_reentrenar');
+            if (mensaje_reentrenar) {
+                setTimeout(() => {
+                    mensaje_reentrenar.style.display = 'none';
+                }, 8000); // 8000 milisegundos = 8 segundos
+            }
+        });
+    </script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            // Obtener el elemento input de fecha
+            const fechaInput = document.getElementById('fecha');
+
+            // Obtener la fecha actual
+            const hoy = new Date();
+            const anio = hoy.getFullYear();
+            const mes = ("0" + (hoy.getMonth() + 1)).slice(-2);  // Sumar 1 ya que los meses van de 0 a 11
+            const dia = ("0" + hoy.getDate()).slice(-2);
+
+            // Formatear la fecha en formato 'YYYY-MM-DD'
+            const fechaMin = `${anio}-${mes}-${dia}`;
+
+            // Establecer el valor mínimo en el input de fecha
+            fechaInput.setAttribute('min', fechaMin);
+        });
+    </script>
+        
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bs-init.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+</body>
+</html>

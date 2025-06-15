@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Detalle Pronóstico</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <style>
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            overflow-y: auto;
+            background: #760a16;
+            z-index: 1000; /* Asegura que el sidebar esté sobre otros elementos */
+        }
+        .content-wrapper {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 0.375rem;
+        }
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .bg-gradient-primary {
+            background: #760a16;
+        }
+        .img-profile {
+            width: 3rem;
+            height: 3rem;
+        }
+        .sticky-footer {
+            background-color: #f8f9fc;
+        }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .btn-red {
+            background-color: #dc3545; /* Rojo */
+            color: white; /* Texto blanco */
+        }
+        .btn-red:hover {
+            background-color: #c82333; /* Rojo oscuro al pasar el ratón */
+            color: white;
+        }
+        .history-card {
+            display: none; /* Oculta la tarjeta por defecto */
+            position: fixed;
+            top: 50%;
+            left: 55%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 1100px;
+            max-height: 80vh; /* Ajusta la altura máxima */
+            overflow-y: auto; /* Permite el scroll vertical */
+            z-index: 1050; /* Asegura que esté encima de otros elementos */
+            background: #fff; /* Fondo blanco para el card */
+            border: 1px solid #e3e6f0; /* Borde ligero */
+            border-radius: 0.375rem; /* Bordes redondeados */
+        }
+        .history-card .card-header {
+            background-color: #f8f9fc; /* Color del encabezado */
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1.5rem 1rem; /* Ajusta el padding superior e inferior */
+            position: relative; /* Asegura que el botón se posicione relativo a este contenedor */
+        }
+        .history-card .btn-red {
+            position: absolute; /* Permite que el botón se quede fijo dentro del contenedor */
+            top: 35%; /* Ajusta la distancia desde la parte superior del contenedor */
+            right: 10px; /* Ajusta la distancia desde el lado derecho del contenedor */
+            z-index: 1060; /* Asegura que esté encima de otros elementos */
+        }
+        .history-card img {
+            width: 100%; /* Asegura que las imágenes ocupen el ancho completo del card */
+            height: auto; /* Mantiene la proporción de la imagen */
+        }
+        .scroll-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1060; /* Asegura que esté encima de la tarjeta */
+        }
+        .animated-logo {
+            height: 65px; /* Ajusta la altura */
+            width: 105px; /* Asegura que la imagen mantenga la proporción */
+            animation: move 3s infinite alternate; /* Aplica la animación de movimiento */
+            border-radius: 10px; /* Borde redondeado, ajusta el valor según sea necesario */
+            position: relative; /* Habilita el posicionamiento relativo */
+            top: 10px; /* Ajusta la posición hacia abajo */
+            left: -10px; /* Ajusta la posición hacia la derecha */
+        }
+        @keyframes move {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body id="page-top">
+    {% if 'rol' in session %}
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <nav class="navbar align-items-start sidebar sidebar-dark accordion p-0 navbar-dark">
+            <div class="container-fluid d-flex flex-column p-0">
+                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-text mx-3">
+                        <img src="../static/img/dogs/logo.png" alt="Logo IMER" class="animated-logo">
+                    </div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    {% if session['rol'] == 'administrador' %}
+                        <li class="nav-item"><a class="nav-link active" href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}"><i class="fas fa-money-bill-wave"></i><span>Ventas</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario') }}"><i class="fas fa-table"></i><span>Stock</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}"><i class="fas fa-user-circle"></i><span>Usuarios</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('pronostico') }}"><i class="fas fa-calendar-alt"></i><span>Pronóstico</span></a></li>
+                    {% elif session['rol'] == 'encargado' %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}"><i class="fas fa-money-bill-wave"></i><span>Ventas</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario') }}"><i class="fas fa-table"></i><span>Stock</span></a></li>
+                    {% elif session['rol'] == 'empleado' %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}"><i class="fas fa-money-bill-wave"></i><span>Ventas</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario') }}"><i class="fas fa-table"></i><span>Stock</span></a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}"><i class="fas fa-user"></i><span>Perfil</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-arrow-right"></i><span>Cerrar Sesión</span></a></li>
+                </ul>
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+            </div>
+        </nav>
+        
+        <div class="d-flex flex-column content-wrapper" id="content-wrapper">
+            <nav class="navbar navbar-expand bg-white shadow mb-4 topbar">
+                <ul class="navbar-nav flex-nowrap ms-auto">
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                            <span class="d-none d-lg-inline me-2 text-gray-600 small">{{ session['nombre'] }} {{ session['apellido'] }} - {{ session['rol'] }}</span>
+                            <img class="border rounded-circle img-profile" src="{{ url_for('static', filename='img/dogs/image.jpeg') }}">
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <div id="content">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 style="color: #0a0b0bef; font-weight: bold;">Detalle del Pronóstico</h2>
+                        <a href="{{ url_for('mes') }}" class="btn btn-red">Volver a Mes</a>
+                    </div>
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <h6 style="color: #800a04; font-weight: bold; text-shadow: 0 0 10px #fea013; margin: 0;">Gráfica de Ventas y Pronóstico</h6>
+                            <button class="btn btn-red" id="showHistoryBtn">Ver historial</button>
+                        </div>
+                        <div class="card-body text-center" style="padding: 0; text-align: center;">
+                            <img src="{{ url_for('detalle.grafica') }}?t={{ timestamp }}" alt="Gráfica de Ventas" style="display: block; max-width: 100%; height: auto; margin: 0 auto;">
+                        </div>
+                    </div>
+
+                    <!-- Added "Ir a Ver" Button -->
+                    <div class="text-center mb-4">
+                        <a href="{{ url_for('ver') }}" class="btn btn-red">VER DETALLE</a>
+                    </div>
+                    
+
+                    <div class="card history-card">
+                        <div class="card-header">
+                            <h5 style="color: #121416ef; font-weight: bold; margin: 0;">
+                                <i class="fas fa-image" style="margin-right: 5px;"></i>
+                                Historial de Imágenes
+                            </h5>
+                            <button class="btn btn-red float-end" id="hideHistoryBtn">Cerrar</button>
+                        </div>
+                        <div class="card-body">
+                            <img src="static/img/estadisticas_historicas.png" alt="Imagen 1" class="img-fluid mb-3">
+                            <img src="static/img/grafica_cantidades_historicas.png" alt="Imagen 2" class="img-fluid mb-3">
+                            <img src="static/img/grafica_cantidades_2020.png" alt="Imagen 3" class="img-fluid mb-3">
+                            <img src="static/img/grafica_cantidades_2021.png" alt="Imagen 4" class="img-fluid mb-3">
+                            <img src="static/img/grafica_cantidades_2022.png" alt="Imagen 5" class="img-fluid mb-3">
+                            <img src="static/img/grafica_cantidades_2023.png" alt="Imagen 6" class="img-fluid mb-3">
+                        </div>
+                    </div>
+
+                    <footer class="bg-white sticky-footer">
+                        <div class="container my-auto">
+                            <div class="text-center my-auto copyright"><span>Copyright © Your Website 2024</span></div>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        document.getElementById('showHistoryBtn').addEventListener('click', function() {
+            document.querySelector('.history-card').style.display = 'block';
+        });
+
+        document.getElementById('hideHistoryBtn').addEventListener('click', function() {
+            document.querySelector('.history-card').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
